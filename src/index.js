@@ -1,6 +1,6 @@
 import './pages/index.css';
 import { initialCards } from './scripts/cards';
-import { openPopup, closePopup } from './scripts/modal';
+import { openPopup, closePopup, closePopupByBackdrop, closeClosestPopup } from './scripts/modal';
 import { createCard, likeCard, removeCard } from './scripts/card';
 
 // Показать картинку в попапе
@@ -67,24 +67,6 @@ const handleFormSubmit = (e) => {
   closePopup(editPopup);
 }
 
-/**
- * Закрыть попап в котором находиться кнопка "х"
- * @param {*} e Объект события
- */
-const _closePopup = (e) => {
-  closePopup(e.target.closest('.popup'))
-}
-
-/**
- * Закрывает попап при клике не посрезственно по самому элементу .popup
- * @param {*} e Объект события
- * @returns void
- */
-const closePopupOnBackdrop = (e) => {
-  if (!e.target.classList.contains('popup')) return;
-  closePopup(e.target);
-}
-
 const addNewCardSubmit = (e) => {
   e.preventDefault();
   const card = createCard({
@@ -100,10 +82,10 @@ editPopupBtn.addEventListener('click', openEditProfile);
 addCardBtn.addEventListener('click', () => openPopup(newCardPopup));
 
 // Закрыть попап по кнопке "х"
-closePopupBtns.forEach((btn) => btn.addEventListener('click', _closePopup));
+closePopupBtns.forEach((btn) => btn.addEventListener('click', closeClosestPopup));
 
 // Закрыть попап по клику по фону
-popups.forEach((btn) => btn.addEventListener('click', closePopupOnBackdrop));
+popups.forEach((btn) => btn.addEventListener('click', closePopupByBackdrop));
 
 // Сохранить изменения профиля
 profileForm.addEventListener('submit', handleFormSubmit);
