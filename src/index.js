@@ -1,27 +1,112 @@
 import './pages/index.css';
 import { initialCards } from './scripts/cards';
-// Темплейт карточки
-const cardTemplate = document.querySelector('#card-template').content;
+import { openPopup, closePopup } from './scripts/modal';
+import { createCard, likeCard, removeCard } from './scripts/card';
 
-// Функция создания карточки
-const makeCard = (data, remove) => {
-  const card = cardTemplate.querySelector('.card').cloneNode(true);
-
-  card.querySelector('.card__image').src = data.link;
-  card.querySelector('.card__image').alt = data.name;
-
-  card.querySelector('.card__title').textContent = data.name;
-
-  card.querySelector('.card__delete-button').addEventListener('click', remove);
-
-  return card
+// Показать картинку в попапе
+const showImage = (data) => {
+  const popupImage = imagePopup.querySelector('.popup__image');
+  popupImage.src = data.link;
+  popupImage.alt = data.name;
+  imagePopup.querySelector('.popup__caption').textContent = data.name;
+  openPopup(imagePopup)
 }
 
-// Функция удаления карточки
-const removeCard = (e) => e.target.closest('.card').remove();
-
 // DOM узлы
-const cards = initialCards.map((c) => makeCard(c, removeCard));
+const cards = initialCards.map((c) => createCard(c, removeCard, likeCard, showImage));
 
+// Список карточек
+const placesList = document.querySelector('.places__list');
 // Вывести карточки на страницу
-document.querySelector('.places__list').append(...cards)
+placesList.append(...cards);
+
+const editPopupBtn = document.querySelector('.profile__edit-button');
+const editPopup = document.querySelector('.popup_type_edit');
+
+const addCardBtn = document.querySelector('.profile__add-button');
+const newCardPopup = document.querySelector('.popup_type_new-card');
+
+const imagePopup = document.querySelector('.popup_type_image');
+
+// Форма редактирования профиля
+const profileForm = document.forms['edit-profile'];
+// Поля формы профиля
+const nameInput = profileForm.elements.name;
+const jobInput = profileForm.elements.description;
+
+// Форма добавления карточки
+const cardForm = document.forms['new-place'];
+// Поля формы карточки
+const placeNameInput = cardForm.elements['place-name'];
+const placeLinkInput = cardForm.elements['link'];
+
+// Данные профиля (имя, специальность)
+const profileTitle = document.querySelector('.profile__title');
+const profileDesc = document.querySelector('.profile__description');
+
+// Кнопки закрытия попапов
+const closePopupBtns = document.querySelectorAll('.popup__close');
+// Попапы
+const popups = document.querySelectorAll('.popup');
+
+const openEditProfile = () => {
+  nameInput.value = profileTitle.textContent;
+  jobInput.value = profileDesc.textContent;
+  openPopup(editPopup)
+}
+
+/**
+ * Сохранить новые данные из полей формы и закрыть попап
+ * @param {*} e Объект события
+ */
+const handleFormSubmit = (e) => {
+  e.preventDefault();
+  profileTitle.textContent = nameInput.value
+  profileDesc.textContent = jobInput.value
+  profileForm.reset();
+  closePopup(editPopup);
+}
+
+/**
+ * Закрыть попап в котором находиться кнопка "х"
+ * @param {*} e Объект события
+ */
+const _closePopup = (e) => {
+  closePopup(e.target.closest('.popup'))
+}
+
+/**
+ * Закрывает попап при клике не посрезственно по самому элементу .popup
+ * @param {*} e Объект события
+ * @returns void
+ */
+const closePopupOnBackdrop = (e) => {
+  if (!e.target.classList.contains('popup')) return;
+  closePopup(e.target);
+}
+
+const addNewCardSubmit = (e) => {
+  e.preventDefault();
+  const card = createCard({
+    name: placeNameInput.value,
+    link: placeLinkInput.value
+  }, removeCard, likeCard, showImage);
+  placesList.prepend(card);
+  cardForm.reset();
+  closePopup(newCardPopup);
+}
+
+editPopupBtn.addEventListener('click', openEditProfile);
+addCardBtn.addEventListener('click', () => openPopup(newCardPopup));
+
+// Закрыть попап по кнопке "х"
+closePopupBtns.forEach((btn) => btn.addEventListener('click', _closePopup));
+
+// Закрыть попап по клику по фону
+popups.forEach((btn) => btn.addEventListener('click', closePopupOnBackdrop));
+
+// Сохранить изменения профиля
+profileForm.addEventListener('submit', handleFormSubmit);
+
+// Добавить новую карточку
+cardForm.addEventListener('submit', addNewCardSubmit); 
