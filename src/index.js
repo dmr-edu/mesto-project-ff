@@ -59,7 +59,7 @@ const openEditProfile = () => {
  * Сохранить новые данные из полей формы и закрыть попап
  * @param {*} e Объект события
  */
-const handleFormSubmit = (e) => {
+const handleProfileSubmit = (e) => {
   e.preventDefault();
   profileTitle.textContent = nameInput.value
   profileDesc.textContent = jobInput.value
@@ -88,7 +88,7 @@ closePopupBtns.forEach((btn) => btn.addEventListener('click', closeClosestPopup)
 popups.forEach((btn) => btn.addEventListener('click', closePopupByBackdrop));
 
 // Сохранить изменения профиля
-profileForm.addEventListener('submit', handleFormSubmit);
+profileForm.addEventListener('submit', handleProfileSubmit);
 
 // Добавить новую карточку
 cardForm.addEventListener('submit', addNewCardSubmit); 

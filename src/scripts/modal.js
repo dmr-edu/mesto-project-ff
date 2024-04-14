@@ -1,11 +1,11 @@
 export const closePopup = (popup) => {
-  popup.classList.remove('popup_is-opened')
+  popup.classList.remove('popup_is-opened');
+  document.removeEventListener('keydown', closePopupByEsc)
 }
 
 const closePopupByEsc = (e) => {
   if (e.key !== 'Escape') return;
   closePopup(document.querySelector('.popup_is-opened'));
-  document.removeEventListener('keydown', closePopupByEsc)
 }
 
 export const openPopup = (popup) => {
