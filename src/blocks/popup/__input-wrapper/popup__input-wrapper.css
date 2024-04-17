@@ -1,0 +1,8 @@
+.popup__input-wrapper {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.popup__input-wrapper:last-of-type {
+  margin-bottom: 0;
+}
