@@ -39,7 +39,7 @@ export const fillProfileData = (data) => {
  * Сохранить новые данные из полей формы и закрыть попап
  * @param {*} e Объект события
  */
-const handleProfileSubmit = (me) => (e) => {
+const handleProfileSubmit = (e) => {
   const endLoading = startLoading(profileForm);
   e.preventDefault();
   putMe({
@@ -47,7 +47,6 @@ const handleProfileSubmit = (me) => (e) => {
     about: jobInput.value
   })
     .then((_me) => {
-      me = _me;
       profileTitle.textContent = _me.name
       profileDesc.textContent = _me.about
       profileForm.reset();
@@ -87,13 +86,12 @@ const openEditAvatar = () => {
  * Сохранить новое изображение
  * @param {*} e Объект события
  */
-const handleAvatarSubmit = (me) => (e) => {
+const handleAvatarSubmit = (e) => {
   const endLoading = startLoading(avatarForm);
   e.preventDefault();
   updateAvatar(avatarInput.value)
     .then((_me) => {
-      me = _me;
-      fillProfileData(me);
+      fillProfileData(_me);
       profileForm.reset();
       closePopup(editPopup);
     })
@@ -101,10 +99,10 @@ const handleAvatarSubmit = (me) => (e) => {
     .finally(endLoading)
 }
 
-export const setProfileListeners = (me) => {
+export const setProfileListeners = () => {
   profileImg.addEventListener('click', openEditAvatar);
-  avatarForm.addEventListener('submit', handleAvatarSubmit(me))
+  avatarForm.addEventListener('submit', handleAvatarSubmit)
   // Сохранить изменения профиля
-  profileForm.addEventListener('submit', handleProfileSubmit(me));
+  profileForm.addEventListener('submit', handleProfileSubmit);
   editPopupBtn.addEventListener('click', openEditProfile);
 }

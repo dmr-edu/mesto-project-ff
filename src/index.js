@@ -1,6 +1,6 @@
 import './pages/index.css';
 import { closePopupByBackdrop, closeClosestPopup } from './scripts/modal';
-import { createAndAddCards, setCardsListener } from './scripts/card';
+import { createAndAddCards, setCardsListener } from './scripts/cards'
 import { enableValidation } from './scripts/validation';
 import { getCards, getMe, showError } from './scripts/api';
 import { fillProfileData, setProfileListeners } from './scripts/profile';
@@ -23,7 +23,9 @@ async function getData() {
     .then(([_me, cards]) => {
       me = _me
       fillProfileData(me);
-      createAndAddCards(cards, me)
+      createAndAddCards(cards, me);
+      setProfileListeners();
+      setCardsListener(me)
     })
     .catch(showError)
 }
@@ -55,6 +57,3 @@ enableValidation({
   inputErrorClass,
   errorClass
 });
-
-setProfileListeners(me);
-setCardsListener(me)
