@@ -3,7 +3,9 @@ import { closePopup, openPopup } from "./modal";
 import {
   inputErrorClass,
   inputSelector,
-  errorClass
+  errorClass,
+  submitButtonSelector,
+  inactiveButtonClass
 } from './selectors'
 import { startLoading } from "./utils/loading";
 import { clearValidation } from "./validation";
@@ -124,7 +126,9 @@ const addNewCardSubmit = (me) => (e) => {
       clearValidation(cardForm, {
         inputSelector,
         inputErrorClass,
-        errorClass
+        errorClass,
+        submitButtonSelector,
+        inactiveButtonClass
       })
       closePopup(newCardPopup);
     })
